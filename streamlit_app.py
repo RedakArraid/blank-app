@@ -6,12 +6,13 @@ import plotly.express as px
 # === CONFIGURATION DE L'APPLICATION ===
 st.set_page_config(page_title="📊 Rapport des Clics", layout="centered")
 st.title("📈 Rapport Visuel des Redirections")
+
 # === URLS DES API ===
 API_LINKEDIN = "http://168.231.86.179:8888/api_linkedin.php"
 API_GITHUB = "http://168.231.86.179:8888/clicks-api.php"
 
 # === FONCTION DE RÉCUPÉRATION DES DONNÉES ===
-@st.cache_data
+@st.cache_data(ttl=60)  # Cache valide pendant 60 secondes
 def fetch_data(url):
     try:
         response = requests.get(url)
@@ -78,7 +79,6 @@ with col4:
 # === SECTION 3 : HISTOGRAMMES EMPILÉS ===
 st.markdown("## 📅 Histogrammes empilés des clics par jour")
 
-# Choix des destinations à afficher
 selected_dest = st.multiselect(
     "Choisir les destinations à afficher :",
     options=["LinkedIn", "GitHub"],
@@ -108,5 +108,4 @@ else:
         title="Clics empilés par jour, par destination et par canal"
     )
     fig.update_layout(bargap=0.3)
-
     st.plotly_chart(fig, use_container_width=True)
